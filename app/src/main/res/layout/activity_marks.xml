@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="10dp"
+    android:paddingBottom="0dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Main">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtfach"
+                android:text="Englisch"
+                android:layout_marginTop="0dp"
+                android:layout_marginLeft="0dp"
+                android:textSize="15sp"
+                android:gravity="left"
+                android:layout_gravity="left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtdurchschnitt"
+                android:text="ø 5.0"
+                android:textSize="15sp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="0dp"
+                android:layout_alignTop="@id/txtfach"
+                android:layout_alignRight="@id/txtfach" />
+
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/marksrecyclerview"
+            android:layout_width="match_parent"
+            android:layout_marginTop="40dp"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabOnMarksView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:src="@drawable/ic_plus_white_48dp"
+            app:layout_anchorGravity="bottom|right|end"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
+

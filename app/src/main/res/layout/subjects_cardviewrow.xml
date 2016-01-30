@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainlayout"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_gravity="center"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="10dp">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:id="@+id/txtSubjectOnSubjects_CardViewRow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="Englisch"
+                android:layout_marginLeft="20dp"
+                android:textSize="20sp"
+                android:layout_alignParentTop="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ø 5.5"
+                android:textSize="25sp"
+                android:id="@+id/txtDurchschnittOnSubjects_CardViewRow"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="5 Noten"
+                android:textSize="20sp"
+                android:id="@+id/txtAnzahlNotenOnSubjects_CardViewRow"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@+id/txtSubjectOnSubjects_CardViewRow"
+                android:layout_below="@+id/txtSubjectOnSubjects_CardViewRow" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>
