@@ -4,6 +4,7 @@ package ch.sintho.hfbuddy.View.Adapters;
  * Created by Sintho on 10.01.2016.
  */
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,7 +32,7 @@ public class SubjectsViewAdapter extends RecyclerView
 
     public static class DataObjectHolder extends RecyclerView.ViewHolder
             implements View
-            .OnClickListener {
+            .OnClickListener, View.OnLongClickListener {
 
         TextView subject;
         TextView durschnitt;
@@ -46,19 +47,22 @@ public class SubjectsViewAdapter extends RecyclerView
 
             Log.i(LOG_TAG, "Adding Listener");
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-            myClickListener.onItemClick((Subject)SubjectsViewAdapter.mDataset.get(getAdapterPosition()));
+            myClickListener.onItemClick(SubjectsViewAdapter.mDataset.get(getAdapterPosition()));
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            myClickListener.onItemLongClick(SubjectsViewAdapter.mDataset.get(getAdapterPosition()));
+            return true;
         }
     }
-
-    public void setOnItemLongClickListener(MyClickListener myClickListener)  {
-
-    }
     public void setOnItemClickListener(MyClickListener myClickListener) {
-        this.myClickListener = myClickListener;
+        SubjectsViewAdapter.myClickListener = myClickListener;
     }
 
     public SubjectsViewAdapter(ArrayList<Subject> myDataset) {
@@ -142,10 +146,14 @@ public class SubjectsViewAdapter extends RecyclerView
 
     @Override
     public int getItemCount() {
+        if (mDataset == null)
+            return 0;
+
         return mDataset.size();
     }
 
     public interface MyClickListener {
-        public void onItemClick(Subject sub);
+        void onItemClick(Subject sub);
+        void onItemLongClick(Subject sub);
     }
 }

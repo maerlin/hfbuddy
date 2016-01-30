@@ -65,18 +65,16 @@ public class SubjectsViewContentFragment extends Fragment {
                 android.support.v4.app.FragmentTransaction fragmentTransaction = mActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.frame, fragment).addToBackStack("SubjectsViewContentFragment").commit();
             }
-        });
 
-        ((SubjectsViewAdapter) mAdapter).setOnItemClickListener(new MyClickListener() {
             @Override
-            public void onItemClick(Subject sub) {
+            public void onItemLongClick(Subject sub) {
                 AlertDialog dialog = new AlertDialog.Builder(v.getContext())
-                        .setTitle("Note löschen")
-                        .setMessage("Wollen Sie diese Note wirklich löschen?")
+                        .setTitle("Fach löschen?")
+                        .setMessage("Wollen Sie dieses Fach und alle Noten wirklich löschen?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 //((MarksViewAdapter) mAdapter).deleteItem(position);
-                                Snackbar.make(getView(), "Note erfolgreich gelöscht!", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(getView(), "Fach erfolgreich gelöscht!", Snackbar.LENGTH_SHORT).show();
                             }
                         })
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

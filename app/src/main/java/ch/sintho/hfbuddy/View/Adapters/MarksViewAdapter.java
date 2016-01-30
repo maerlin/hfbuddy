@@ -107,6 +107,9 @@ public class MarksViewAdapter extends RecyclerView
 
     @Override
     public int getItemCount() {
+        if (mDataset == null)
+            return 0;
+
         return mDataset.size();
     }
 
