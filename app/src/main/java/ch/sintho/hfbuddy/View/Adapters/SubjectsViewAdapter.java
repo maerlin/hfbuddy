@@ -137,9 +137,10 @@ public class SubjectsViewAdapter extends RecyclerView
         notifyItemInserted(index);
     }
 
-    public void deleteItem(int index) {
-        DbContext.getInstance().executeQuery("DELETE FROM " + DbContext.TABLE_MARKS + " WHERE " + DbContext.COLUMN_SUBJECT_FK + " = " + mDataset.get(index).getId(), Mark.class);
-        DbContext.getInstance().executeQuery("DELETE FROM " + DbContext.TABLE_SUBJECTS + " WHERE " + DbContext.COLUMN_ID + " = " + mDataset.get(index).getId(), Subject.class);
+    public void deleteItem(Subject sub) {
+        int index = mDataset.indexOf(sub);
+        DbContext.getInstance().executeQuery("DELETE FROM " + DbContext.TABLE_MARKS + " WHERE " + DbContext.COLUMN_SUBJECT_FK + " = " + sub.getId(), Mark.class);
+        DbContext.getInstance().executeQuery("DELETE FROM " + DbContext.TABLE_SUBJECTS + " WHERE " + DbContext.COLUMN_ID + " = " + sub.getId(), Subject.class);
         mDataset.remove(index);
         notifyItemRemoved(index);
     }

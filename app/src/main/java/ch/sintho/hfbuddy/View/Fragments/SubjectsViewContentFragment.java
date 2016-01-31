@@ -3,6 +3,7 @@ package ch.sintho.hfbuddy.View.Fragments;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -53,6 +54,16 @@ public class SubjectsViewContentFragment extends Fragment {
 
         // Code to remove an item with default animation
         //((MarksViewAdapter) mAdapter).deleteItem(index);
+        FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fabOnSubjectsView);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FachContentFragment fragment = new FachContentFragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.frame, fragment).addToBackStack("SubjectsViewContentFragment");
+                fragmentTransaction.commit();
+            }
+        });
 
         ((SubjectsViewAdapter) mAdapter).setOnItemClickListener(new MyClickListener() {
             @Override
@@ -67,13 +78,13 @@ public class SubjectsViewContentFragment extends Fragment {
             }
 
             @Override
-            public void onItemLongClick(Subject sub) {
+            public void onItemLongClick(final Subject sub) {
                 AlertDialog dialog = new AlertDialog.Builder(v.getContext())
                         .setTitle("Fach löschen?")
                         .setMessage("Wollen Sie dieses Fach und alle Noten wirklich löschen?")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                //((MarksViewAdapter) mAdapter).deleteItem(position);
+                                ((SubjectsViewAdapter) mAdapter).deleteItem(sub);
                                 Snackbar.make(getView(), "Fach erfolgreich gelöscht!", Snackbar.LENGTH_SHORT).show();
                             }
                         })

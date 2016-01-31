@@ -27,17 +27,25 @@ import ch.sintho.hfbuddy.Model.PartialMarkType;
 import ch.sintho.hfbuddy.Model.Subject;
 import ch.sintho.hfbuddy.R;
 import ch.sintho.hfbuddy.View.Adapters.MarksViewAdapter;
+import ch.sintho.hfbuddy.View.ItemRemovedNotificator;
+import ch.sintho.hfbuddy.View.MarksLayoutManager;
 
 /**
  * Created by Sintho on 09.01.2016.
  */
-public class MarksContentFragment extends Fragment {
+public class MarksContentFragment extends Fragment implements ItemRemovedNotificator{
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private MarksLayoutManager mLayoutManager;
     private int mSubjectId;
+    private MarksContentFragment instance;
+    private TextView subject;
+    TextView durschnitt;
 
+    public MarksContentFragment() {
+        instance = this;
+    }
 
     @Nullable
     @Override
@@ -46,7 +54,7 @@ public class MarksContentFragment extends Fragment {
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.marksrecyclerview);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(v.getContext());
+        mLayoutManager = new MarksLayoutManager(v.getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         Bundle args = getArguments();
@@ -54,12 +62,10 @@ public class MarksContentFragment extends Fragment {
         mSubjectId = args.getInt("subjectid",0);
         mAdapter = new MarksViewAdapter(getDataSet());
         mRecyclerView.setAdapter(mAdapter);
-        final TextView subject;
-        TextView durschnitt;
-
         subject = (TextView) v.findViewById(R.id.txtfach);
         durschnitt = (TextView) v.findViewById(R.id.txtdurchschnitt);
 
+        mLayoutManager.setItemsRemovedListener(instance);
 
         FloatingActionButton fab = (FloatingActionButton) v.findViewById(R.id.fabOnMarksView);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,11 +76,40 @@ public class MarksContentFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putInt("subjectid", mSubjectId);
                 fragment.setArguments(bundle);
-                fragmentTransaction.replace(R.id.frame,fragment).addToBackStack("MarksContentFragment");
+                fragmentTransaction.replace(R.id.frame, fragment).addToBackStack("MarksContentFragment");
                 fragmentTransaction.commit();
             }
         });
 
+        ((MarksViewAdapter) mAdapter).setOnItemClickListener(new MarksViewAdapter
+                .MyClickListener() {
+            @Override
+            public void onItemClick(final int position, View v) {
+                AlertDialog dialog = new AlertDialog.Builder(v.getContext())
+                        .setTitle("Note löschen")
+                        .setMessage("Wollen Sie diese Note wirklich löschen?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                ((MarksViewAdapter) mAdapter).deleteItem(position);
+                                Snackbar.make(getView(), "Note erfolgreich gelöscht!", Snackbar.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
+
+        RefreshDurchschnitt();
+
+        return v;
+    }
+
+    public void RefreshDurchschnitt(){
 
         Subject sub = DbContext.getInstance().GetObjectById(DbContext.TABLE_SUBJECTS, mSubjectId, Subject.class);
         ArrayList<Mark> marks = DbContext.getInstance().executeQuery("SELECT * FROM " + DbContext.TABLE_MARKS + " WHERE " + DbContext.COLUMN_SUBJECT_FK + " = " + sub.getId(), Mark.class);
@@ -118,40 +153,15 @@ public class MarksContentFragment extends Fragment {
 
         subject.setText(sub.getName().toUpperCase());
         durschnitt.setText("ø " + Mark.formatMark(durchschnitt));
-
-        // Code to Add an item with default animation
-        //((MarksViewAdapter) mAdapter).addItem(obj, index);
-
-        // Code to remove an item with default animation
-        //((MarksViewAdapter) mAdapter).deleteItem(index);
-
-        ((MarksViewAdapter) mAdapter).setOnItemClickListener(new MarksViewAdapter
-                .MyClickListener() {
-            @Override
-            public void onItemClick(final int position, View v) {
-                AlertDialog dialog = new AlertDialog.Builder(v.getContext())
-                        .setTitle("Note löschen")
-                        .setMessage("Wollen Sie diese Note wirklich löschen?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                ((MarksViewAdapter) mAdapter).deleteItem(position);
-                                Snackbar.make(getView(), "Note erfolgreich gelöscht!", Snackbar.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        });
-
-        return v;
     }
+
 
     private ArrayList<Mark> getDataSet() {
         return Controller.GetInstance().getMarksFromDb(getActivity(), mSubjectId);
+    }
+
+    @Override
+    public void onItemsRemoved() {
+        RefreshDurchschnitt();
     }
 }

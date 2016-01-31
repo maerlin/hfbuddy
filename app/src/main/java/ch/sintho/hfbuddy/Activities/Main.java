@@ -88,19 +88,7 @@ public class Main extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.newMark) {
-            NewMarkFragment fragment = new NewMarkFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame,fragment).addToBackStack("Dashboard");
-            fragmentTransaction.commit();
-        }
-        else if (id == R.id.nav_subjects) {
-            FachContentFragment fragment = new FachContentFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.frame, fragment).addToBackStack("Dashboard");
-            fragmentTransaction.commit();
-        }
-        else if (id == R.id.dashboard) {
+        if (id == R.id.dashboard) {
             SubjectsViewContentFragment fragment = SubjectsViewContentFragment.newInstance(this);
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame, fragment);
