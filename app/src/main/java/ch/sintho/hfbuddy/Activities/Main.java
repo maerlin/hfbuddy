@@ -14,6 +14,7 @@ import ch.sintho.hfbuddy.R;
 import ch.sintho.hfbuddy.View.Fragments.FachContentFragment;
 import ch.sintho.hfbuddy.View.Fragments.NewMarkFragment;
 import ch.sintho.hfbuddy.View.Fragments.SubjectsViewContentFragment;
+import ch.sintho.hfbuddy.View.Fragments.TasksViewContentFragment;
 
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -93,7 +94,11 @@ public class Main extends AppCompatActivity
             android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.frame, fragment);
             fragmentTransaction.commit();
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.aufgaben) {
+            TasksViewContentFragment fragment = TasksViewContentFragment.newInstance(this);
+            android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.frame, fragment);
+            fragmentTransaction.commit();
 
         } else if (id == R.id.nav_send) {
 

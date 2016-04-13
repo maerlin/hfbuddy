@@ -15,13 +15,14 @@ import ch.sintho.hfbuddy.Model.IBase;
 import ch.sintho.hfbuddy.Model.Mark;
 import ch.sintho.hfbuddy.Model.PartialMarkType;
 import ch.sintho.hfbuddy.Model.Subject;
+import ch.sintho.hfbuddy.Model.Task;
 
 /**
  * Created by Sintho on 06.01.2016.
  */
 public class DbContext extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 4;
     private static final String DB_NAME = "Marks.db";
 
     //Common Columns
@@ -42,6 +43,12 @@ public class DbContext extends SQLiteOpenHelper {
     //Table Subjects
     public static final String TABLE_SUBJECTS = "SUBJECTS";
 
+    //Table Tasks
+    public static final String TABLE_TASKS = "TASKS";
+    public static final String COLUMN_TITLE = "TITLE";
+    public static final String COLUMN_NOTE = "NOTE";
+    public static final String COLUMN_TASKDATE = "TASKDATE";
+    public static final String COLUMN_IMAGE = "IMAGE";
 
     private static final String CREATE_TABLE_MARKS = "CREATE TABLE "+ TABLE_MARKS + "("
                                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
@@ -58,6 +65,14 @@ public class DbContext extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_PARTIALMARK_TYPES = "CREATE TABLE "+ TABLE_PARTIALMARK_TYPES + "("
                                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
                                 + COLUMN_NAME + " TEXT)";
+
+    private static final String CREATE_TABLE_TASKS = "CREATE TABLE "+ TABLE_TASKS + "("
+            + COLUMN_ID + " INTEGER PRIMARY KEY,"
+            + COLUMN_TITLE + " TEXT,"
+            + COLUMN_NOTE + " TEXT,"
+            + COLUMN_TASKDATE + " DATE,"
+            + COLUMN_IMAGE + " BLOB,"
+            + COLUMN_SUBJECT_FK + " INT)";
 
     private static DbContext instance;
     private static Context mCtx;
@@ -130,6 +145,9 @@ public class DbContext extends SQLiteOpenHelper {
             else if (annotationType == Subject.class) {
                 list.add((T)Converter.convertSubjectFromDb(cursor));
             }
+            else if (annotationType == Task.class) {
+                list.add((T)Converter.convertTaskFromDb(cursor));
+            }
             else
                 throw new TypeNotPresentException(annotationType.getName(), null);
 
@@ -153,12 +171,13 @@ public class DbContext extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_MARKS);
         db.execSQL(CREATE_TABLE_PARTIALMARK_TYPES);
         db.execSQL(CREATE_TABLE_SUBJECTS);
+        db.execSQL(CREATE_TABLE_TASKS);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + TABLE_MARKS);
-        db.execSQL(CREATE_TABLE_MARKS);
+
+
     }
 }

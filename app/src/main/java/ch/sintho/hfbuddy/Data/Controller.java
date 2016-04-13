@@ -12,6 +12,7 @@ import java.util.List;
 import ch.sintho.hfbuddy.Model.Mark;
 import ch.sintho.hfbuddy.Model.PartialMarkType;
 import ch.sintho.hfbuddy.Model.Subject;
+import ch.sintho.hfbuddy.Model.Task;
 import ch.sintho.hfbuddy.R;
 
 /**
@@ -37,6 +38,12 @@ public class Controller {
     public ArrayList<Mark> getMarksFromDb(Activity activity, int subjectid)
     {
         ArrayList<Mark> results = DbContext.getInstance(activity).executeQuery("SELECT * FROM " + DbContext.TABLE_MARKS + " WHERE " + DbContext.COLUMN_SUBJECT_FK + " = " + subjectid, Mark.class);
+        return results;
+    }
+
+    public ArrayList<Task> getTasksFromDb(Activity activity)
+    {
+        ArrayList<Task> results = DbContext.getInstance(activity).executeQuery("SELECT * FROM " + DbContext.TABLE_TASKS, Task.class);
         return results;
     }
 
