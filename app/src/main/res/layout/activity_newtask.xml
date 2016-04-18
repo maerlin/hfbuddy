@@ -6,104 +6,132 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:id="@+id/container"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Main">
+    tools:context=".Activities.Main">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/newtaskscrollView">
+        <FrameLayout
+            android:id="@+id/framelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Titel" android:id="@+id/taskTitle"
-                android:textIsSelectable="false"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content">
 
-            <EditText
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Titel" android:id="@+id/taskTitle"
+                    android:textIsSelectable="false"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/taskTitle"
+                    android:inputType="text"
+                    android:textSize="18sp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/txtNewTaskTitle" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="Notiz" android:id="@+id/taskNote"
+                    android:textIsSelectable="true"
+                    android:layout_below="@+id/txtNewTaskTitle"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/taskNote"
+                    android:textSize="18sp"
+                    android:inputType="textMultiLine"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/txtnewTaskBemerkung" />
+
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinnernewTaskFach"
+                    android:paddingLeft="0dp"
+                    android:spinnerMode="dropdown"
+                    android:textSize="18sp"
+                    android:layout_below="@+id/labelFach"
+                    android:layout_alignParentStart="true" />
+
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:id="@+id/txtnewTaskDate"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="18sp"
+                    android:text="25.01.2016"
+                    android:layout_below="@+id/spinnernewTaskFach"
+                    android:layout_alignParentStart="true"/>
+
+                <Button
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:text="K"
+                    android:id="@+id/btnnNewTaskDate"
+                    android:layout_alignTop="@+id/txtnewTaskDate"
+                    android:layout_toEndOf="@+id/txtnewTaskDate" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:text="Bild hinzufügen"
+                    android:id="@+id/btnNewTaskAddPhoto"
+                    android:layout_alignTop="@+id/txtnewTaskDate"
+                    android:layout_toEndOf="@+id/btnnNewTaskDate" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fach"
+                    android:id="@+id/labelFach"
+                    android:textIsSelectable="true"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_below="@+id/txtnewTaskBemerkung"
+                    android:layout_alignParentStart="true"
+                    android:labelFor="@id/labelFach" />
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Speichern"
+                    android:id="@+id/btnSaveTask"
+                    android:bottom="@+id/newTaskimagepreview"
+                    android:layout_below="@+id/btnnNewTaskDate"
+                    />
+
+                <ImageButton
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_marginTop="10dp"
+                    android:maxHeight="200dp"
+                    android:maxWidth="200dp"
+                    android:visibility="invisible"
+                    android:id="@+id/newTaskimagepreview"
+                    android:layout_below="@+id/btnSaveTask"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="true" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/expanded_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/taskTitle"
-                android:inputType="text"
-                android:textSize="18sp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/txtNewTaskTitle" />
+                android:visibility="invisible"
+                android:contentDescription="Tippe um zu vergrössern" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="Bemerkung" android:id="@+id/taskNote"
-                android:textIsSelectable="true"
-                android:layout_below="@+id/txtNewTaskTitle"
-                android:textSize="18sp" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/taskNote"
-                android:textSize="18sp"
-                android:inputType="textMultiLine"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:id="@+id/txtnewTaskBemerkung" />
-
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinnernewTaskFach"
-                android:paddingLeft="0dp"
-                android:spinnerMode="dropdown"
-                android:textSize="18sp"
-                android:layout_below="@+id/labelFach"
-                android:layout_alignParentStart="true" />
-
-            <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:id="@+id/txtnewTaskDate"
-                android:layout_marginBottom="15dp"
-                android:textSize="18sp"
-                android:text="25.01.2016"
-                android:layout_below="@+id/spinnernewTaskFach"
-                android:layout_alignParentStart="true"/>
-
-            <Button
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:text="K"
-                android:id="@+id/btnnNewTaskDate"
-                android:layout_alignTop="@+id/txtnewTaskDate"
-                android:layout_toEndOf="@+id/txtnewTaskDate" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fach"
-                android:id="@+id/labelFach"
-                android:textIsSelectable="true"
-                android:textSize="18sp"
-                android:layout_marginBottom="5dp"
-                android:layout_below="@+id/txtnewTaskBemerkung"
-                android:layout_alignParentStart="true"
-                android:labelFor="@id/labelFach" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Speichern"
-                android:layout_marginTop="15dp"
-                android:id="@+id/btnSaveTask"
-                android:layout_below="@+id/btnnNewTaskDate"
-                android:layout_alignParentStart="true" />
-
-        </RelativeLayout>
-
-    </ScrollView>
+        </FrameLayout>
 
 
 

@@ -19,6 +19,8 @@ import ch.sintho.hfbuddy.View.Fragments.TasksViewContentFragment;
 public class Main extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static final int CAMERA_REQUEST = 1;
+    public static final int SELECT_FILE = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
