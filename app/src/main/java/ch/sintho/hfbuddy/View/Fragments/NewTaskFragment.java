@@ -46,6 +46,7 @@ import java.util.Date;
 
 import ch.sintho.hfbuddy.Activities.Main;
 import ch.sintho.hfbuddy.Data.Controller;
+import ch.sintho.hfbuddy.Data.DbContext;
 import ch.sintho.hfbuddy.Helpers.ExifUtil;
 import ch.sintho.hfbuddy.Helpers.MediaHelper;
 import ch.sintho.hfbuddy.Model.Subject;
@@ -63,10 +64,15 @@ public class NewTaskFragment extends Fragment {
     static int mDay;
     static EditText editDate;
     static Context context;
-    static ImageView imageButton;
+    static ImageButton imageButton;
+    static ImageView expandedImageView;
     private Animator mCurrentAnimator;
     private int mShortAnimationDuration;
     private Bitmap chosenBitmapOrignal;
+    private Bitmap chosenThumbnail;
+
+    private Task task = null;
+
     private Uri mImageUri;
     private RelativeLayout relativeLayout;
 
@@ -168,11 +174,13 @@ public class NewTaskFragment extends Fragment {
         final Spinner spinnerFach = (Spinner) v.findViewById(R.id.spinnernewTaskFach);
         relativeLayout = (RelativeLayout) v.findViewById(R.id.container);
         final Button btnDate = (Button) v.findViewById(R.id.btnnNewTaskDate);
+        expandedImageView = (ImageView) v.findViewById(
+                R.id.expanded_image);
+
         final Button btnAddPhoto = (Button) v.findViewById(R.id.btnNewTaskAddPhoto);
         btnAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 selectImage();
             }
         });
@@ -181,7 +189,8 @@ public class NewTaskFragment extends Fragment {
         editDate = (EditText) v.findViewById(R.id.txtnewTaskDate);
         NewTaskFragment.context = v.getContext();
 
-        //int subid = (int)getArguments().get("subjectid");
+        Bundle arguments = getArguments();
+
         //selectSpinnerItemByValue(spinnerFach, subid);
 
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -209,9 +218,13 @@ public class NewTaskFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Task task = new Task();
+                if (task == null)
+                    task = new Task();
+
                 task.setTitle(txtTitel.getText().toString());
                 task.setNote(txtNote.getText().toString());
+                task.setPicture(chosenBitmapOrignal);
+                task.setThumbnail(chosenThumbnail);
 
                 DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -233,17 +246,50 @@ public class NewTaskFragment extends Fragment {
                 txtTitel.setText("");
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
                 Date date = new Date();
+                imageButton.setImageDrawable(null);
+                expandedImageView.setImageDrawable(null);
+                chosenBitmapOrignal.recycle();
+                chosenThumbnail.recycle();
+
+                mImageUri = null;
                 editDate.setText(dateFormat.format(date));
 
                 Toast.makeText(v.getContext(), "Aufgabe erfolgreich gespeichert!", Toast.LENGTH_SHORT).show();
             }
         });
 
+        if (arguments != null && arguments.containsKey("taskid"))
+        {
+            int taskid = (int)getArguments().get("taskid");
+            task = DbContext.getInstance().getObjectById(DbContext.TABLE_TASKS, taskid, Task.class);
+
+            if (task == null)
+                Toast.makeText(v.getContext(), "Fehler beim Laden einer Aufgabe!", Toast.LENGTH_SHORT).show();
+
+            txtTitel.setText(task.getTitle());
+            txtNote.setText(task.getNote());
+            editDate.setText(dateFormat.format(task.getDate()));
+
+            Bitmap thumbnail = task.getThumbnail();
+            if (thumbnail != null){
+                chosenThumbnail = thumbnail;
+                imageButton.setImageBitmap(thumbnail);
+                imageButton.setVisibility(View.VISIBLE);
+            }
+
+            Bitmap picture = task.getPicture();
+            if (picture != null) {
+                chosenBitmapOrignal = picture;
+                expandedImageView.setImageBitmap(picture);
+            }
+        }
+        else {
+            task = null;
+        }
         return v;
     }
     private File createTemporaryFile(String part, String ext) throws Exception
     {
-
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
 
@@ -278,13 +324,13 @@ public class NewTaskFragment extends Fragment {
                     chosenBitmapOrignal.recycle();
 
                 Bitmap bitmap = grabImage();
-                Bitmap thumbnail =Bitmap.createScaledBitmap(bitmap, imageButton.getWidth(), imageButton.getHeight(), false);
+                chosenThumbnail =Bitmap.createScaledBitmap(bitmap, imageButton.getWidth(), imageButton.getHeight(), false);
                 String selectedImagePath = MediaHelper.GetAbsolutePath(this.getContext(),mImageUri);
 
                 chosenBitmapOrignal = ExifUtil.rotateBitmap(selectedImagePath, bitmap);
 
                 imageButton.setVisibility(View.VISIBLE);
-                imageButton.setImageBitmap(thumbnail);
+                imageButton.setImageBitmap(chosenThumbnail);
 
             } else if (requestCode == Main.SELECT_FILE) {
 
@@ -295,7 +341,7 @@ public class NewTaskFragment extends Fragment {
                 String selectedImagePath = MediaHelper.GetAbsolutePath(this.getContext(),selectedImageUri);
 
                 Bitmap bitmap = BitmapFactory.decodeFile(selectedImagePath);
-                Bitmap thumbnail = resize(bitmap, imageButton.getWidth(), imageButton.getWidth());
+                chosenThumbnail = resize(bitmap, imageButton.getWidth(), imageButton.getWidth());
 
                 if (bitmap.getHeight() < 1000)
                     bitmap = resize(bitmap, relativeLayout.getWidth(), relativeLayout.getHeight());
@@ -303,7 +349,7 @@ public class NewTaskFragment extends Fragment {
                 chosenBitmapOrignal = ExifUtil.rotateBitmap(selectedImagePath, bitmap);
 
                 imageButton.setVisibility(View.VISIBLE);
-                imageButton.setImageBitmap(thumbnail);
+                imageButton.setImageBitmap(chosenThumbnail);
             }
         }
     }
@@ -341,9 +387,6 @@ public class NewTaskFragment extends Fragment {
             return;
 
         // Load the high-resolution "zoomed-in" image.
-        final ImageView expandedImageView = (ImageView) getActivity().findViewById(
-                R.id.expanded_image);
-
         expandedImageView.setImageBitmap(bitmap);
 
         // Calculate the starting and ending bounds for the zoomed-in image.

@@ -48,7 +48,8 @@ public class DbContext extends SQLiteOpenHelper {
     public static final String COLUMN_TITLE = "TITLE";
     public static final String COLUMN_NOTE = "NOTE";
     public static final String COLUMN_TASKDATE = "TASKDATE";
-    public static final String COLUMN_IMAGE = "IMAGE";
+    public static final String COLUMN_IMAGE = "IMAGEPATH";
+    public static final String COLUMN_THUMBNAIL = "THUMBNAILPATH";
 
     private static final String CREATE_TABLE_MARKS = "CREATE TABLE "+ TABLE_MARKS + "("
                                 + COLUMN_ID + " INTEGER PRIMARY KEY,"
@@ -71,7 +72,8 @@ public class DbContext extends SQLiteOpenHelper {
             + COLUMN_TITLE + " TEXT,"
             + COLUMN_NOTE + " TEXT,"
             + COLUMN_TASKDATE + " DATE,"
-            + COLUMN_IMAGE + " BLOB,"
+            + COLUMN_IMAGE + " TEXT,"
+            + COLUMN_THUMBNAIL + " TEXT,"
             + COLUMN_SUBJECT_FK + " INT)";
 
     private static DbContext instance;
@@ -103,7 +105,6 @@ public class DbContext extends SQLiteOpenHelper {
         if (id == 0) {
             id = (int)(long) db.insertOrThrow(table,null,values);
             obj.setId(id);
-
         }
         else {
             db.update(table,values,COLUMN_ID + "="+id, null);
@@ -112,15 +113,20 @@ public class DbContext extends SQLiteOpenHelper {
         db.close();
     }
 
-    public <T extends Annotation> T GetObjectById(String table, int id, Class<T> annotationType)    {
-        ArrayList<T> list = executeQuery("SELECT * FROM " + table + " WHERE " + COLUMN_ID + " = " + id, annotationType);
+    public <T extends Annotation> T getObjectById(String table, int id, Class<T> annotationType)    {
+        ArrayList<T> list = executeQuery("SELECT * FROM " + table + " WHERE " + COLUMN_ID + " = " + id, annotationType, true);
         if (list == null || list.size() == 0)
             return null;
 
         return list.get(0);
 
     }
+
     public <T extends Annotation> ArrayList<T> executeQuery (String sql, Class<T> annotationType) {
+        return executeQuery(sql, annotationType, false);
+    }
+
+    public <T extends Annotation> ArrayList<T> executeQuery (String sql, Class<T> annotationType, boolean loadfully) {
 
         SQLiteDatabase db = getDb();
         Cursor cursor = db.rawQuery(sql,null);
@@ -146,7 +152,7 @@ public class DbContext extends SQLiteOpenHelper {
                 list.add((T)Converter.convertSubjectFromDb(cursor));
             }
             else if (annotationType == Task.class) {
-                list.add((T)Converter.convertTaskFromDb(cursor));
+                list.add((T)Converter.convertTaskFromDb(cursor,loadfully));
             }
             else
                 throw new TypeNotPresentException(annotationType.getName(), null);

@@ -1,5 +1,6 @@
 package ch.sintho.hfbuddy.Activities;
 
+import android.content.ContextWrapper;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import ch.sintho.hfbuddy.Helpers.MediaHelper;
 import ch.sintho.hfbuddy.R;
 import ch.sintho.hfbuddy.View.Fragments.FachContentFragment;
 import ch.sintho.hfbuddy.View.Fragments.NewMarkFragment;
@@ -51,6 +53,7 @@ public class Main extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
+        MediaHelper.setCw(new ContextWrapper(getApplicationContext()));
     }
 
     @Override

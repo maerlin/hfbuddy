@@ -4,12 +4,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
-import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import ch.sintho.hfbuddy.Helpers.MediaHelper;
 import ch.sintho.hfbuddy.Model.Mark;
 import ch.sintho.hfbuddy.Model.PartialMarkType;
 import ch.sintho.hfbuddy.Model.Subject;
@@ -22,13 +23,13 @@ public class Converter {
 
     public static Mark getMarkById(int id)
     {
-        Object result = DbContext.getInstance().GetObjectById(DbContext.TABLE_MARKS, id, Mark.class);
+        Object result = DbContext.getInstance().getObjectById(DbContext.TABLE_MARKS, id, Mark.class);
         return result != null ? (Mark) result : null;
     }
 
     public static PartialMarkType getPartialMarkTypeById(int id)
     {
-        Object result = DbContext.getInstance().GetObjectById(DbContext.TABLE_PARTIALMARK_TYPES, id, PartialMarkType.class);
+        Object result = DbContext.getInstance().getObjectById(DbContext.TABLE_PARTIALMARK_TYPES, id, PartialMarkType.class);
         return result != null ? (PartialMarkType) result : null;
     }
 
@@ -40,20 +41,19 @@ public class Converter {
 
     public static byte[] getBytesFromBitmap(Bitmap bmp)
     {
-        int size = bmp.getRowBytes() * bmp.getHeight();
-        ByteBuffer b = ByteBuffer.allocate(size); bmp.copyPixelsToBuffer(b);
-        byte[] bytes = new byte[size];
-        b.get(bytes, 0, bytes.length);
-        return bytes;
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 50, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
     }
 
     public static Subject getSubjectById(int id)
     {
-        Object result = DbContext.getInstance().GetObjectById(DbContext.TABLE_SUBJECTS, id, Subject.class);
+        Object result = DbContext.getInstance().getObjectById(DbContext.TABLE_SUBJECTS, id, Subject.class);
         return result != null ? (Subject) result : null;
     }
 
-    public static Task convertTaskFromDb(Cursor cursor) {
+    public static Task convertTaskFromDb(Cursor cursor, boolean loadfully) {
 
         Task task = new Task();
         task.setId(cursor.getInt(0));
@@ -68,17 +68,29 @@ public class Converter {
             e.printStackTrace();
         }
 
-        byte[] bb = cursor.getBlob(4);
-        if (bb != null && bb.length > 0)
+        String imgPath = cursor.getString(4);
+        if (imgPath != null && !imgPath.isEmpty() && loadfully)
         {
-            task.setPicture(getBitmapFromByte(bb));
+            Bitmap img = MediaHelper.getImageFromStorage(imgPath);
+            if (img != null)
+                task.setPicture(img);
         }
 
-        Subject sub = getSubjectById(cursor.getInt(5));
-        if (sub == null)
-            throw new NullPointerException("SubjectId is NULL!");
+        String thumbPath = cursor.getString(5);
+        if (thumbPath != null && !thumbPath.isEmpty() && loadfully)
+        {
+            Bitmap th = MediaHelper.getImageFromStorage(thumbPath);
+            if (th != null)
+                task.setThumbnail(th);
+        }
 
-        task.setSubject(sub);
+        int subid = cursor.getInt(6);
+
+        if (subid > 0)
+        {
+            Subject sub = getSubjectById(subid);
+            task.setSubject(sub);
+        }
 
         return task;
     }

@@ -64,9 +64,9 @@ public class TasksViewContentFragment extends Fragment {
             public void onItemClick(Task task) {
                 NewTaskFragment fragment = new NewTaskFragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                //Bundle bundle = new Bundle();
-                //bundle.putInt("subjectid", mSubjectId);
-                //fragment.setArguments(bundle);
+                Bundle bundle = new Bundle();
+                bundle.putInt("taskid", task.getId());
+                fragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.frame, fragment).addToBackStack("TasksViewContentFragment");
                 fragmentTransaction.commit();
             }

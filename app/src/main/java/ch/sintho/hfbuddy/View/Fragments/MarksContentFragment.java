@@ -1,6 +1,5 @@
 package ch.sintho.hfbuddy.View.Fragments;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,13 +7,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,7 +108,7 @@ public class MarksContentFragment extends Fragment implements ItemRemovedNotific
 
     public void RefreshDurchschnitt(){
 
-        Subject sub = DbContext.getInstance().GetObjectById(DbContext.TABLE_SUBJECTS, mSubjectId, Subject.class);
+        Subject sub = DbContext.getInstance().getObjectById(DbContext.TABLE_SUBJECTS, mSubjectId, Subject.class);
         ArrayList<Mark> marks = DbContext.getInstance().executeQuery("SELECT * FROM " + DbContext.TABLE_MARKS + " WHERE " + DbContext.COLUMN_SUBJECT_FK + " = " + sub.getId(), Mark.class);
 
         double durchschnitt = 0.00;

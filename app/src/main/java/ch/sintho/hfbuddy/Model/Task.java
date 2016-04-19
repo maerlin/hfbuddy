@@ -11,6 +11,7 @@ import java.util.Date;
 
 import ch.sintho.hfbuddy.Data.Converter;
 import ch.sintho.hfbuddy.Data.DbContext;
+import ch.sintho.hfbuddy.Helpers.MediaHelper;
 
 /**
  * Created by Sintho on 31.01.2016.
@@ -22,6 +23,7 @@ public class Task implements Annotation, IBase {
     private String title;
     private String note;
 
+    private Bitmap thumbnail;
     private Bitmap picture;
 
     public Subject getSubject() {
@@ -66,6 +68,15 @@ public class Task implements Annotation, IBase {
         this.picture = picture;
     }
 
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+
     @Override
     public Class<? extends Annotation> annotationType() {
         return Task.class;
@@ -81,7 +92,12 @@ public class Task implements Annotation, IBase {
         Bitmap bm = getPicture();
         if (bm != null)
         {
-            cv.put(DbContext.COLUMN_IMAGE, Converter.getBytesFromBitmap(bm));
+            String picturepath = MediaHelper.saveToInternalStorage(bm, "img");
+            cv.put(DbContext.COLUMN_IMAGE, picturepath);
+
+            Bitmap th = getThumbnail();
+            String thumbnailpath = MediaHelper.saveToInternalStorage(th, "thumbnail");
+            cv.put(DbContext.COLUMN_THUMBNAIL, thumbnailpath);
         }
 
         cv.put(DbContext.COLUMN_SUBJECT_FK, getSubject() != null ? getSubject().getId(): null);
