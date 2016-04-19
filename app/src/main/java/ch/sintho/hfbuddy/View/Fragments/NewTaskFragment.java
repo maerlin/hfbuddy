@@ -248,8 +248,12 @@ public class NewTaskFragment extends Fragment {
                 Date date = new Date();
                 imageButton.setImageDrawable(null);
                 expandedImageView.setImageDrawable(null);
-                chosenBitmapOrignal.recycle();
-                chosenThumbnail.recycle();
+
+                if (chosenBitmapOrignal != null)
+                    chosenBitmapOrignal.recycle();
+
+                if (chosenThumbnail != null)
+                    chosenThumbnail.recycle();
 
                 mImageUri = null;
                 editDate.setText(dateFormat.format(date));

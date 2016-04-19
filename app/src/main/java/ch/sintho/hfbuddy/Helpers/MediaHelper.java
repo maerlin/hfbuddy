@@ -59,6 +59,20 @@ public class MediaHelper {
         return null;
     }
 
+    public static void deleteFile(String path)
+    {
+        if (path == null || path.isEmpty())
+            return;
+
+        try{
+            File file = new File(path);
+            file.delete();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
     public static String saveToInternalStorage(Bitmap bitmapImage, String kind){
 
         // path to /data/data/yourapp/app_data/imageDir

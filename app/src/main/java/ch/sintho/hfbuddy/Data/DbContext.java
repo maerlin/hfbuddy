@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteTransactionListener;
 import android.os.Debug;
 import android.util.Log;
 
@@ -126,6 +127,25 @@ public class DbContext extends SQLiteOpenHelper {
         return executeQuery(sql, annotationType, false);
     }
 
+    public String getStringColumnEntry(String sql)
+    {
+        SQLiteDatabase db = getDb();
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (!cursor.moveToFirst())
+        {
+            cursor.close();
+            db.close();
+            return null;
+        }
+        String result = cursor.getString(0);
+
+        cursor.close();
+        db.close();
+
+        return result;
+
+    }
     public <T extends Annotation> ArrayList<T> executeQuery (String sql, Class<T> annotationType, boolean loadfully) {
 
         SQLiteDatabase db = getDb();

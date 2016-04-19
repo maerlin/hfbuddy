@@ -4,6 +4,9 @@ package ch.sintho.hfbuddy.View.Adapters;
  * Created by Sintho on 10.01.2016.
  */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ch.sintho.hfbuddy.Data.DbContext;
+import ch.sintho.hfbuddy.Helpers.MediaHelper;
 import ch.sintho.hfbuddy.Model.Mark;
 import ch.sintho.hfbuddy.Model.PartialMarkType;
 import ch.sintho.hfbuddy.Model.Subject;
@@ -100,10 +105,16 @@ public class TasksViewAdapter extends RecyclerView
         notifyItemInserted(index);
     }
 
-    public void deleteItem(Task sub) {
-        int index = mDataset.indexOf(sub);
-        //ToDo: Delete Task from DB
-        //DbContext.getInstance().executeQuery("DELETE FROM " + DbContext.TABLE_SUBJECTS + " WHERE " + DbContext.COLUMN_ID + " = " + sub.getId(), Subject.class);
+    public void deleteItem(Task task) {
+        int index = mDataset.indexOf(task);
+
+        String picpath = DbContext.getInstance().getStringColumnEntry("SELECT " + DbContext.COLUMN_IMAGE + " FROM " + DbContext.TABLE_TASKS +" WHERE " + DbContext.COLUMN_ID + " = " + task.getId());
+        String thumbpath = DbContext.getInstance().getStringColumnEntry("SELECT " + DbContext.COLUMN_THUMBNAIL + " FROM " + DbContext.TABLE_TASKS +" WHERE " + DbContext.COLUMN_ID + " = " + task.getId());
+
+        MediaHelper.deleteFile(picpath);
+        MediaHelper.deleteFile(thumbpath);
+
+        DbContext.getInstance().executeQuery("DELETE FROM " + DbContext.TABLE_TASKS + " WHERE " + DbContext.COLUMN_ID + " = " + task.getId(), Task.class);
         mDataset.remove(index);
         notifyItemRemoved(index);
     }
