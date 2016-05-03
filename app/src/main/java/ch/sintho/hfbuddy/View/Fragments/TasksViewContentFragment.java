@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import ch.sintho.hfbuddy.Data.Controller;
 import ch.sintho.hfbuddy.Model.Subject;
@@ -97,6 +98,9 @@ public class TasksViewContentFragment extends Fragment {
     }
 
     private ArrayList<Task> getDataSet() {
-        return Controller.GetInstance().getTasksFromDb(getActivity());
+        ArrayList<Task> tasks = Controller.GetInstance().getTasksFromDb(getActivity());
+
+        Collections.sort(tasks);
+        return tasks;
     }
 }

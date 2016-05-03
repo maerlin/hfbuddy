@@ -16,7 +16,7 @@ import ch.sintho.hfbuddy.Helpers.MediaHelper;
 /**
  * Created by Sintho on 31.01.2016.
  */
-public class Task implements Annotation, IBase {
+public class Task implements Annotation, IBase, Comparable<Task> {
 
     private int id;
     private Date date;
@@ -76,6 +76,10 @@ public class Task implements Annotation, IBase {
         this.thumbnail = thumbnail;
     }
 
+    @Override
+    public int compareTo(Task task) {
+        return this.getDate().compareTo(task.getDate());
+    }
 
     @Override
     public Class<? extends Annotation> annotationType() {
