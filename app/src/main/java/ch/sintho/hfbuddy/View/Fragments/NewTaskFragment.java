@@ -191,7 +191,6 @@ public class NewTaskFragment extends Fragment {
 
         Bundle arguments = getArguments();
 
-        //selectSpinnerItemByValue(spinnerFach, subid);
 
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         Date date = new Date();
@@ -286,6 +285,9 @@ public class NewTaskFragment extends Fragment {
                 chosenBitmapOrignal = picture;
                 expandedImageView.setImageBitmap(picture);
             }
+
+            if (task.getSubject() != null)
+                selectSpinnerItemByValue(spinnerFach, task.getSubject().getId());
         }
         else {
             task = null;

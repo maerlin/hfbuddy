@@ -58,6 +58,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/spinnernewTaskFach"
                     android:paddingLeft="0dp"
+                    android:textColor="@android:color/white"
                     android:spinnerMode="dropdown"
                     android:textSize="18sp"
                     android:layout_below="@+id/labelFach"
